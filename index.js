@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs').promises;
 
 // Import utility modules for each CRUD operation
 const CreateStudentUtil = require('./utils/CreateStudentUtil');
