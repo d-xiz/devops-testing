@@ -94,6 +94,47 @@
                 <div id="create-message" class="message"></div>
             </div>
         </section>
+
+        <!-- Dylan - READ Section -->
+        <section id="view-section" class="content-section">
+            <div class="section-header">
+                <i class="fas fa-trophy"></i>
+                <h2>Chess Rankings</h2>
+            </div>
+            <div class="controls">
+                <button class="btn-secondary">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+                <div class="select-wrapper">
+                    <i class="fas fa-filter"></i>
+                    <select id="sort-by">
+                        <option value="rapid">Sort by Rapid</option>
+                        <option value="blitz">Sort by Blitz</option>
+                        <option value="bullet">Sort by Bullet</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="rankings-container">
+                <table id="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Student ID</th>
+                            <th><i class="fas fa-bolt"></i> Rapid</th>
+                            <th><i class="fas fa-fire"></i> Blitz</th>
+                            <th><i class="fas fa-rocket"></i> Bullet</th>
+                            <th><i class="far fa-calendar"></i> Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankings-body">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="view-message" class="message"></div>
+        </section>
     </main>
 
     <footer>
