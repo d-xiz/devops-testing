@@ -3,6 +3,7 @@ const path = require('path');
 
 // Import utility modules for each CRUD operation
 const CreateStudentUtil = require('./utils/CreateStudentUtil');
+const ViewRankingsUtil = require('./utils/ViewRankingsUtil');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +14,10 @@ app.use(express.static('public'));
 
 // ===== Daniella - CREATE API Endpoints =====
 app.post('/api/students', CreateStudentUtil.createStudent);
+
+// ===== Dylan - READ API Endpoints =====
+app.get('/api/students', ViewRankingsUtil.getAllStudents);
+app.get('/api/rankings', ViewRankingsUtil.getRankings);
 
 // Serve main page
 app.get('/', (req, res) => {
