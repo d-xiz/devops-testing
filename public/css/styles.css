@@ -535,6 +535,37 @@ footer {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    header {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+
+    .header-text h1 {
+        font-size: 1.75rem;
+    }
+
+    main {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .content-section {
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-xl);
+    }
+
+    .nav-btn span {
+        display: none;
+    }
+
+    .nav-btn {
+        padding: var(--spacing-sm);
+    }
+
     table {
         font-size: 0.875rem;
     }
@@ -559,4 +590,24 @@ footer {
     .controls select {
         width: 100%;
     }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    border-radius: var(--radius-md);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
 }
