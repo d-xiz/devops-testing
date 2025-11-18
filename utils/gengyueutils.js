@@ -5,7 +5,7 @@ const DB_PATH = path.join(__dirname, 'students.json');
 
 /**
  * Gengyue - UPDATE Feature
- * Member C - Handles student login and score updates
+ * Gengyue - Handles student login and score updates
  */
 
 // Simple login - verify student ID exists

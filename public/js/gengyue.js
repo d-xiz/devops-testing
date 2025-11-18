@@ -1,6 +1,6 @@
 /**
  * Gengyue - UPDATE Feature (Frontend)
- * Member C - Handles student login and score updates
+ * Gengyue - Handles student login and score updates
  */
 
 // Handle login form submission
