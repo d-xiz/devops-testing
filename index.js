@@ -3,7 +3,7 @@ const path = require('path');
 
 // Import utility modules for each CRUD operation
 const CreateStudentUtil = require('./utils/CreateStudentUtil');
-const ViewRankingsUtil = require('./utils/ViewRankingsUtil');
+const ViewRankingsUtil = require('./utils/DylanYeoUtil');
 const gengyueutils = require('./utils/gengyueutils');
 const DeleteAccountUtil = require('./utils/DeleteAccountUtil');
 
@@ -18,7 +18,6 @@ app.use(express.static('public'));
 app.post('/api/students', CreateStudentUtil.createStudent);
 
 // ===== Dylan - READ API Endpoints =====
-app.get('/api/students', ViewRankingsUtil.getAllStudents);
 app.get('/api/rankings', ViewRankingsUtil.getRankings);
 
 // ===== Gengyue - UPDATE API Endpoints =====
