@@ -1,5 +1,5 @@
 /**
- * Member D - DELETE Feature (Frontend)
+ * Danish - DELETE Feature (Frontend)
  * Handles student account deletion (leaving the club)
  */
 

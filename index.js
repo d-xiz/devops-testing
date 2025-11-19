@@ -5,7 +5,7 @@ const path = require('path');
 const CreateStudentUtil = require('./utils/CreateStudentUtil');
 const ViewRankingsUtil = require('./utils/DylanYeoUtil');
 const gengyueutils = require('./utils/gengyueutils');
-const DeleteAccountUtil = require('./utils/DeleteAccountUtil');
+const DeleteAccountUtil = require('./utils/DanishUtil');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
