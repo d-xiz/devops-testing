@@ -4,7 +4,7 @@ const path = require('path');
 const DB_PATH = path.join(__dirname, 'students.json');
 
 /**
- * Member D - DELETE Feature
+ * Danish - DELETE Feature
  * Handles student account deletion (leaving the club)
  */
 
