@@ -598,6 +598,42 @@ tbody tr:nth-child(3) td:first-child {
     background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
 }
 
+/* Current Scores Display */
+.current-scores {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-xl);
+    border: 2px solid var(--gray-100);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.score-item i {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.score-item strong {
+    color: var(--gray-900);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
 /* Warning Box */
 .warning-box {
     background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
@@ -728,6 +764,14 @@ footer {
         font-size: 1.5rem;
     }
 
+    .scores-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .current-scores {
+        grid-template-columns: 1fr;
+    }
+
     .controls {
         flex-direction: column;
         align-items: stretch;
@@ -740,6 +784,11 @@ footer {
     .controls select {
         width: 100%;
     }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
 }
 
 /* Custom Scrollbar */

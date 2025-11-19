@@ -11,7 +11,7 @@ const DB_PATH = path.join(__dirname, 'students.json');
 // Delete student account
 const deleteStudent = async (req, res) => {
     // Uncomment the following line to test error handling
-        // throw new Error('Test error');
+    // throw new Error('Test error');
     try {
         const { id } = req.params;
 
