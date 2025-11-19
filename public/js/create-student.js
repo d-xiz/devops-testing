@@ -1,5 +1,5 @@
 /**
- * Daniella - CREATE Feature (Frontend)
+ * Member A - CREATE Feature (Frontend)
  * Handles student account creation UI and interactions
  */
 
@@ -30,23 +30,6 @@ document.getElementById('create-form').addEventListener('submit', async (e) => {
         return;
     }
 
-    // Validate score ranges (0-3000)
-    const rapidNum = parseInt(rapid);
-    const blitzNum = parseInt(blitz);
-    const bulletNum = parseInt(bullet);
-
-    if (isNaN(rapidNum) || isNaN(blitzNum) || isNaN(bulletNum)) {
-        showMessage('create', 'All rating fields must be valid numbers.', 'error');
-        return;
-    }
-
-    if (rapidNum < 0 || rapidNum > 3000 ||
-        blitzNum < 0 || blitzNum > 3000 ||
-        bulletNum < 0 || bulletNum > 3000) {
-        showMessage('create', 'Invalid scores. All ratings must be between 0 and 3000.', 'error');
-        return;
-    }
-
     try {
         const response = await fetch('/api/students', {
             method: 'POST',
@@ -55,35 +38,11 @@ document.getElementById('create-form').addEventListener('submit', async (e) => {
             },
             body: JSON.stringify({
                 id,
-                rapid: rapidNum,
-                blitz: blitzNum,
-                bullet: bulletNum
+                rapid: parseInt(rapid),
+                blitz: parseInt(blitz),
+                bullet: parseInt(bullet)
             })
         });
-
-        // Handle HTTP errors before parsing JSON
-        if (!response.ok) {
-            let errorMessage = 'Failed to create account. Please try again.';
-            
-            try {
-                const errorResult = await response.json();
-                if (errorResult.message) {
-                    errorMessage = errorResult.message;
-                }
-            } catch (parseError) {
-                // If response is not valid JSON, use status-based messages
-                if (response.status === 409) {
-                    errorMessage = 'Student ID already exists. Please use a different ID.';
-                } else if (response.status === 500) {
-                    errorMessage = 'Server error. Please try again later.';
-                } else if (response.status === 400) {
-                    errorMessage = 'Invalid request. Please check your input.';
-                }
-            }
-            
-            showMessage('create', errorMessage, 'error');
-            return;
-        }
 
         const result = await response.json();
 
@@ -99,17 +58,12 @@ document.getElementById('create-form').addEventListener('submit', async (e) => {
                 setTimeout(() => loadRankings(), 500);
             }
         } else {
-            showMessage('create', result.message || 'Failed to create account.', 'error');
+            showMessage('create', result.message, 'error');
         }
 
     } catch (error) {
-        // Handle network errors (no connection, server unreachable, etc.)
         console.error('Error creating student:', error);
-        if (error instanceof TypeError && error.message.includes('fetch')) {
-            showMessage('create', 'Network error. Please check your connection and try again.', 'error');
-        } else {
-            showMessage('create', 'An unexpected error occurred. Please try again.', 'error');
-        }
+        showMessage('create', 'Failed to create account. Please try again.', 'error');
     }
 });
 
