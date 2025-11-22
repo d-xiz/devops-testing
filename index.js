@@ -4,7 +4,7 @@ const path = require('path');
 // Import utility modules for each CRUD operation
 const CreateStudentUtil = require('./utils/DaniellaUtil');
 const ViewRankingsUtil = require('./utils/DylanUtil');
-const GengyueUtil = require('./utils/GengyueUtil');
+const UpdateStudentUtil = require('./utils/GengyueUtil');
 const DeleteAccountUtil = require('./utils/DanishUtil');
 
 const app = express();
@@ -21,9 +21,9 @@ app.post('/api/students', CreateStudentUtil.createStudent);
 app.get('/api/rankings', ViewRankingsUtil.getRankings);
 
 // ===== Gengyue - UPDATE API Endpoints =====
-app.post('/api/login', GengyueUtil.loginStudent);
-app.get('/api/students/:id', GengyueUtil.getStudentById);
-app.put('/api/students/:id', GengyueUtil.updateScores);
+app.post('/api/login', UpdateStudentUtil.loginStudent);
+app.get('/api/students/:id', UpdateStudentUtil.getStudentById);
+app.put('/api/students/:id', UpdateStudentUtil.updateScores);
 
 // ===== Danish- DELETE API Endpoints =====
 app.delete('/api/students/:id', DeleteAccountUtil.deleteStudent);
