@@ -4,12 +4,14 @@ const path = require('path');
 const DB_PATH = path.join(__dirname, 'students.json');
 
 /**
- * Member D - DELETE Feature
+ * Danish - DELETE Feature
  * Handles student account deletion (leaving the club)
  */
 
 // Delete student account
 const deleteStudent = async (req, res) => {
+    // Uncomment the following line to test error handling
+    // throw new Error('Test error');
     try {
         const { id } = req.params;
 

@@ -464,6 +464,7 @@ h3 i {
 }
 
 .controls select {
+    padding-left: 2.2rem !important;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 2px solid var(--gray-200);
     border-radius: var(--radius-lg);
@@ -501,6 +502,7 @@ h3 i {
 }
 
 table {
+    overflow: hidden;
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;

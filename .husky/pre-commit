@@ -1,0 +1,23 @@
+#!/bin/sh
+# Tells the computer to run this script using the sh shell.
+
+# Fetch the latest main branch silently
+git fetch origin main >/dev/null 2>&1
+
+# Get the latest commit on origin/main
+MAIN=$(git rev-parse origin/main)
+
+# Get the common history of your branch and origin/main
+# If this equals MAIN → you have the latest changes
+# If not → your branch is behind main and needs a pull/rebase
+BASE=$(git merge-base HEAD origin/main)
+
+# If BASE is not equal to MAIN, your branch does not contain the latest main changes
+if [ "$BASE" != "$MAIN" ]; then
+    echo "WARNING: Your branch is behind origin/main."
+    echo "Please run: git pull origin main --rebase"
+    echo "Commit aborted."
+    exit 1
+fi
+
+echo "Your branch contains the latest origin/main. Proceeding with commit..."
