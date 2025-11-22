@@ -17,7 +17,7 @@ All notable changes to the Chess Club Ranking System will be documented in this 
   - ViewRankingsUtil.js to DylanUtil.js
   - DeleteAccountUtil.js to DanishUtil.js
 
-## [1.0.0] - 2024-11
+## [1.0.0] - 2025-11
 
 ### Added - CREATE Feature (Daniella)
 - Student registration functionality
