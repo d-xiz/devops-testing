@@ -34,7 +34,12 @@ app.get('/', (req, res) => {
 });
 
 // Start server
+if (process.env.NODE_ENV !== 'test') {
+
 app.listen(PORT, () => {
     console.log(`Chess Club Ranking System running on http://localhost:${PORT}`);
     console.log(`Server started at ${new Date().toLocaleString()}`);
 });
+}
+
+module.exports = app; // Export app for testing purposes
