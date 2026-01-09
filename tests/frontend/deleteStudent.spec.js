@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import './playwright-coverage.js'
 
 const BASE_URL = 'http://localhost:5000';
 
@@ -80,7 +81,7 @@ const generateTestId = () => {
     await goToDeleteSection(page);
 
     await page.fill('#delete-id', '9999999a');
-    await page.locator('#confirm-delete').click();
+  await page.check('#confirm-delete');
 
     page.once('dialog', dialog => dialog.accept());
 
