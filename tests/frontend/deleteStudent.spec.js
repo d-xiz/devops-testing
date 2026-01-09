@@ -18,12 +18,6 @@ test.describe('DELETE Student Account – Frontend Tests', () => {
   });
 };
 
-const generateTestId = () => {
-  const digits = Math.floor(1000000 + Math.random() * 9000000); // 7 digits
-  const letters = ['a', 'b', 'c', 'd', 'e'];
-  const letter = letters[Math.floor(Math.random() * letters.length)];
-  return `${digits}${letter}`;
-};
 
 
   // 1 Missing Student ID (Negative + Edge Case)
@@ -94,4 +88,48 @@ const generateTestId = () => {
       .toContainText('not found');
   });
 
+test('should show success message when deletion succeeds (mocked)', async ({ page }) => {
+await page.route('**/api/students/**', route => {
+    if (route.request().method() === 'DELETE') {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          message: 'Account deleted successfully.',
+          deletedStudent: {
+            id: '2403880d',
+            rapid: 1200,
+            blitz: 1100,
+            bullet: 1000
+          },
+          remainingStudents: 3
+        })
+      });
+    }
+    route.continue();
+  });
+
+  await page.goto(BASE_URL);
+  await page.click('text=Delete Account');
+
+  await page.evaluate(() => {
+  document.getElementById('delete-form').setAttribute('novalidate', true);
+});
+
+  await page.fill('#delete-id', '2403880d');
+  await page.evaluate(() => {
+  document.getElementById('confirm-delete').checked = true;
+});
+
+
+
+  page.once('dialog', d => d.accept());
+
+await page.click('#delete-form button[type="submit"]');
+
+  const msg = page.locator('#delete-message');
+ await expect(msg).toBeVisible({ timeout: 5000 });
+  await expect(msg).toContainText('Deleted Account Details');
+});
 });

@@ -3,8 +3,12 @@
  * Handles student account deletion (leaving the club)
  */
 
+document.addEventListener('DOMContentLoaded', () => {
+
 // Handle delete form submission
-document.getElementById('delete-form').addEventListener('submit', async (e) => {
+ const form = document.getElementById('delete-form');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const id = document.getElementById('delete-id').value.trim();
@@ -70,8 +74,8 @@ document.getElementById('delete-form').addEventListener('submit', async (e) => {
 
     } catch (error) {
         console.error('Error deleting account:', error);
-        showDeleteMessage('Failed to delete account. Please try again.', 'error');
-    }
+        showDeleteMessage('Failed to delete account. Please try again.', 'error');}
+});
 });
 
 // Show message for delete section

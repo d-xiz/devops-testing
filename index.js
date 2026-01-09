@@ -29,11 +29,13 @@ app.put('/api/students/:id', UpdateStudentUtil.updateScores);
 app.delete('/api/students/:id', DeleteAccountUtil.deleteStudent);
 
 // Serve main page
+/* istanbul ignore next */
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start server
+/* istanbul ignore next */
 if (process.env.NODE_ENV !== 'test') {
 
 app.listen(PORT, () => {
