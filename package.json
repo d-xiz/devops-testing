@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest --verbose",
+    "test:coverage": "jest --verbose --coverage",
     "test-frontend": "npx playwright test"
   },
   "keywords": [
