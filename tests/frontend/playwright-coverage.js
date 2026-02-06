@@ -17,6 +17,20 @@ test.beforeEach(async ({ page, browserName }) => {
 });
 
 test.afterEach(async ({ page, browserName }, testInfo) => {
+  if (testInfo.status !== testInfo.expectedStatus) {
+    try {
+      const screenshot = await page.screenshot({ fullPage: true });
+
+      await testInfo.attach('Failure screenshot', {
+        body: screenshot,
+        contentType: 'image/png',
+      });
+    } catch (err) {
+      console.warn('Failed to capture screenshot:', err.message);
+    }
+  }
+
+
     if (browserName === 'chromium') {
         // Stop JS coverage collection for the page
         const coverage = await page.coverage.stopJSCoverage();

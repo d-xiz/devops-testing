@@ -39,7 +39,7 @@ async function convertCoverage() {
     );
 
     for (const entry of v8Coverage) {
-      // Only collect coverage for Danish DELETE feature
+
       if (!entry.url || !entry.url.includes('danish.js')) continue;
       if (!entry.source) continue;
 
@@ -69,35 +69,39 @@ async function convertCoverage() {
 
   reports.create('html').execute(context);
   reports.create('lcovonly').execute(context);
-// Retrieve overall coverage summary data from the coverage map
+
 const summary = coverageMap.getCoverageSummary().data;
-// Define minimum acceptable coverage thresholds for each metric (in percentage)
+
 const thresholds = {
-lines: 90, // Minimum 90% of lines must be covered
-statements: 90, // Minimum 90% of statements must be covered
-functions: 90, // Minimum 90% of functions must be covered
-branches: 90 // Minimum 90% of branches must be covered
+lines: 90,
+statements: 90,
+functions: 90,
+branches: 90
 };
-// Array to store any metrics that do not meet the defined threshold
+
 let belowThreshold = [];
-// Loop through each coverage metric (lines, statements, functions, branches)
+
 for (const [metric, threshold] of Object.entries(thresholds)) {
-const covered = summary[metric].pct; // Get the coverage percentage for this metric
-// Check if the actual coverage is below the threshold
+const covered = summary[metric].pct;
 if (covered < threshold) {
-// Add a message to the belowThreshold array for reporting later
+
 belowThreshold.push(`${metric}: ${covered}% (below ${threshold}%)`);
 }
 }
-// If any metrics fall below the required threshold
+
 if (belowThreshold.length > 0) {
 console.error('\nX Coverage threshold NOT met:');
-// Print each failing metric and its coverage percentage
+
 belowThreshold.forEach(msg => console.error(` - ${msg}`));
-// Set exit code to 1 to indicate failure (useful for CI/CD pipelines)
+
 process.exitCode = 1;
 } else {
-// If all thresholds are met, display a success message
+console.log('\nCoverage Summary:');
+console.log(`Lines:       ${summary.lines.pct}%`);
+console.log(`Statements:  ${summary.statements.pct}%`);
+console.log(`Functions:   ${summary.functions.pct}%`);
+console.log(`Branches:    ${summary.branches.pct}%`);
+
 console.log('\n✓ All coverage thresholds met.');
 }
   console.log(` Frontend coverage generated at: ${outputDir}`);
