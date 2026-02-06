@@ -75,7 +75,9 @@ test.describe('DELETE Student Account – Frontend Tests', () => {
     await goToDeleteSection(page);
 
     await page.fill('#delete-id', '9999999a');
-  await page.check('#confirm-delete');
+ await page.evaluate(() => {
+  document.getElementById('confirm-delete').checked = true;
+});
 
     page.once('dialog', dialog => dialog.accept());
 

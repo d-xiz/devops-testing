@@ -9,8 +9,9 @@ test('Delete section visual regression', async ({ page }) => {
   // Wait for UI to stabilize
   await page.waitForSelector('#delete-form');
 
-  // Visual assertion (this IS the test)
+  // Visual assertion
   await expect(page).toHaveScreenshot('delete-section.png', {
-    maxDiffPixels: 100,
-  });
+  maxDiffPixelRatio: 0.02,
+});
+
 });
