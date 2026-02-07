@@ -9,12 +9,6 @@ const UpdateStudentUtil = require('./utils/GengyueUtil');
 const DeleteAccountUtil = require('./utils/DanishUtil');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(express.json());
-app.use(express.static('public'));
-
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'test') {
   const statusMonitor = require('express-status-monitor');
@@ -24,6 +18,13 @@ if (process.env.NODE_ENV !== 'test') {
     title: 'Chess Club System Status'
   }));
 }
+
+const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(express.json());
+app.use(express.static('public'));
+
 
 
 

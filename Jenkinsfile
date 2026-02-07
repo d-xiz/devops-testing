@@ -102,7 +102,7 @@ pipeline {
         script {
           if (isUnix()) {
             sh """
-              kubectl port-forward svc/chess-club-service ${NODE_PORT}:5050 &
+              kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000 &
               PID=\$!
               sleep 5
               curl -f http://127.0.0.1:${NODE_PORT} || exit 1
@@ -110,7 +110,7 @@ pipeline {
             """
           } else {
             bat """
-              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:5050 &
+              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000 &
               timeout /t 5 > NUL
               powershell -Command "Invoke-WebRequest http://127.0.0.1:${NODE_PORT} -UseBasicParsing"
             """
