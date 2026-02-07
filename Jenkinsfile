@@ -158,7 +158,14 @@ pipeline {
        emailext(
       to: 'danishmohamed2003@gmail.com',
       subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-      body: "Build succeeded. URL: ${env.BUILD_URL}"
+     body: """
+        <h3>Build Successful</h3>
+        <p><b>Project:</b> ${env.JOB_NAME}</p>
+        <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+        <p><b>Status:</b> SUCCESS</p>
+        <p><b>URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+      """,
+      mimeType: 'text/html'
     )
     }
 
@@ -166,7 +173,17 @@ pipeline {
        emailext(
       to: 'danishmohamed2003@gmail.com',
       subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-      body: "Build failed. URL: ${env.BUILD_URL}"
+      body: """
+        <h3>Build Failed</h3>
+        <p><b>Project:</b> ${env.JOB_NAME}</p>
+        <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+        <p><b>Status:</b> FAILED</p>
+        <p><b>URL:</b> <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+        <p><b>Console log is attached for debugging.</b></p>
+      """,
+      mimeType: 'text/html',
+      attachLog: true,
+      compressLog: true
     )
 
     always {
