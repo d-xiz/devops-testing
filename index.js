@@ -1,11 +1,6 @@
 const express = require('express');
 const path = require('path');
-const logger = require('./logger');
-let statusMonitor;
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'test') {
-  statusMonitor = require('express-status-monitor');
-}
+const logger = require('./logger')
 
 // Import utility modules for each CRUD operation
 const CreateStudentUtil = require('./utils/DaniellaUtil');
@@ -19,10 +14,19 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 app.use(express.static('public'));
+
 /* istanbul ignore next */
-if (statusMonitor) {
-  app.use(statusMonitor());
+/* istanbul ignore next */
+if (process.env.NODE_ENV !== 'test') {
+  const statusMonitor = require('express-status-monitor');
+
+  app.use(statusMonitor({
+    path: '/status',
+    title: 'Chess Club System Status'
+  }));
 }
+
+
 
 // ===== Daniella - CREATE API Endpoints =====
 app.post('/api/students', CreateStudentUtil.createStudent);
@@ -41,20 +45,18 @@ app.delete('/api/students/:id', DeleteAccountUtil.deleteStudent);
 // Serve main page
 /* istanbul ignore next */
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start server
 /* istanbul ignore next */
 if (require.main === module) {
-
-  app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Chess Club Ranking System running on port ${PORT}`);
-      console.log(`Server started at ${new Date().toLocaleString()}`);
-      logger.info(`Server started at ${new Date().toLocaleString()}`);
-      logger.error('This is a test error log on server start');
+  app.listen(PORT, () => {
+    console.log(`Chess Club Ranking System running on http://localhost:${PORT}`);
+    console.log(`Server started at ${new Date().toLocaleString()}`);
+    logger.info(`Demo project at: ${new Date().toLocaleString()}!`);
+    logger.error(`Example of error log`)
   });
-
 }
 
 module.exports = app;
