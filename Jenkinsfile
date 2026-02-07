@@ -141,7 +141,7 @@ pipeline {
     }
   }
 
-
+  }
 
   post {
     success {
@@ -156,5 +156,4 @@ pipeline {
       archiveArtifacts artifacts: 'coverage/**', fingerprint: true
     }
   }
-}
 }
