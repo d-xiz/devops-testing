@@ -16,9 +16,9 @@ app.use(express.json());
 app.use(express.static('public'));
 
 /* istanbul ignore next */
-const statusMonitor = require('express-status-monitor');
-
 if (!process.env.JEST_WORKER_ID) {
+  const statusMonitor = require('express-status-monitor');
+
   app.use(statusMonitor({
     path: '/status',
     title: 'Chess Club System Status'
