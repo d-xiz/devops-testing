@@ -11,9 +11,7 @@ const DeleteAccountUtil = require('./utils/DanishUtil');
 const app = express();
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'test') {
-  const statusMonitor = require('express-status-monitor');
-
-  app.use(statusMonitor({
+  app.use(require('express-status-monitor')({
     path: '/status',
     title: 'Chess Club System Status'
   }));
