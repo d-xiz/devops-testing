@@ -154,12 +154,19 @@ pipeline {
   }
   post {
     success {
-      echo "✅ Pipeline completed successfully"
+       emailext(
+      to: 'danishmohamed2003@gmail.com',
+      subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+      body: "Build succeeded. URL: ${env.BUILD_URL}"
+    )
     }
 
     failure {
-      echo "❌ Pipeline failed"
-    }
+       emailext(
+      to: 'danishmohamed2003@gmail.com',
+      subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+      body: "Build failed. URL: ${env.BUILD_URL}"
+    )
 
     always {
       archiveArtifacts artifacts: 'coverage/**', fingerprint: true
