@@ -127,12 +127,25 @@ pipeline {
   }
 }
 
-    stage('Verify Status Endpoint') {
+  stage('Verify Status Endpoint') {
   steps {
-    bat '''
-      echo Checking /status endpoint...
-      powershell -Command "Invoke-WebRequest http://localhost:30080/status -UseBasicParsing"
-    '''
+    script {
+      // We use one 'bat' block so the port-forward stays alive for the test
+      bat """
+        @echo off
+        echo Starting Tunnel...
+        start /B kubectl port-forward svc/chess-club-service 30080:5000
+
+        echo Waiting for tunnel to stabilize (10 seconds)...
+        ping 127.0.0.1 -n 10 > nul
+
+        echo Checking /status endpoint...
+        powershell -Command "try { \$r = Invoke-WebRequest http://127.0.0.1:30080/status -UseBasicParsing; echo \$r.Content; if(\$r.StatusCode -eq 200) { exit 0 } else { exit 1 } } catch { echo 'Failed to reach /status'; exit 1 }"
+
+        echo Cleaning up tunnel...
+        taskkill /IM kubectl.exe /F
+      """
+    }
   }
 }
 
