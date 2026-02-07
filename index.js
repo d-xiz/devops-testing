@@ -16,15 +16,15 @@ app.use(express.json());
 app.use(express.static('public'));
 
 /* istanbul ignore next */
-/* istanbul ignore next */
-if (process.env.NODE_ENV !== 'test') {
-  const statusMonitor = require('express-status-monitor');
+const statusMonitor = require('express-status-monitor');
 
+if (!process.env.JEST_WORKER_ID) {
   app.use(statusMonitor({
     path: '/status',
     title: 'Chess Club System Status'
   }));
 }
+
 
 
 
