@@ -10,12 +10,14 @@ const DeleteAccountUtil = require('./utils/DanishUtil');
 
 const app = express();
 /* istanbul ignore next */
+if (process.env.NODE_ENV == 'production') {
   app.use(require('express-status-monitor')({
     path: '/status',
     title: 'Chess Club System Status',
-    spans: [{ interval: 1, retention: 60 }] // Basic configuration
+    spans: [{ interval: 1, retention: 60 }]
   }));
   console.log("Status Monitor Initialized");
+}
 
 const PORT = process.env.PORT || 5000;
 
