@@ -101,13 +101,13 @@ pipeline {
         script {
           if (isUnix()) {
             sh """
-              kubectl port-forward svc/chess-club-service ${NODE_PORT}:${CONTAINER_PORT} &
+              kubectl port-forward svc/chess-club-service ${NODE_PORT}: 5050 &
               sleep 5
               curl http://127.0.0.1:${NODE_PORT}
             """
           } else {
             bat """
-              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:${CONTAINER_PORT}
+              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:5050 &
               timeout /t 5 > NUL
               powershell -Command "Invoke-WebRequest http://127.0.0.1:${NODE_PORT} -UseBasicParsing"
             """
@@ -115,6 +115,15 @@ pipeline {
         }
       }
     }
+    stage('Verify Status Endpoint') {
+  steps {
+    bat '''
+      echo Checking /status endpoint...
+      powershell -Command "Invoke-WebRequest http://localhost:30080/status -UseBasicParsing"
+    '''
+  }
+}
+
   }
 
   post {
