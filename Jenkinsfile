@@ -56,7 +56,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          runCmd("docker build -t ${IMAGE_NAME} .")
+          runCmd("docker build --no-cache -t ${IMAGE_NAME} .")
         }
       }
     }
