@@ -6,12 +6,23 @@ const path = require('path');
 const app = express();
 /* istanbul ignore next */
 if (process.env.NODE_ENV == 'production') {
+   console.log('Registering /status endpoint');
   app.use(require('express-status-monitor')({
     path: '/status',
     title: 'Chess Club System Status',
     spans: [{ interval: 1, retention: 60 }]
   }));
   console.log("Status Monitor Initialized");
+}
+console.log('===== APP BOOT =====');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('Express version:', require('express/package.json').version);
+
+try {
+  require.resolve('express-status-monitor');
+  console.log('express-status-monitor: FOUND');
+} catch (e) {
+  console.log('express-status-monitor: NOT FOUND');
 }
 
 const logger = require('./logger')
