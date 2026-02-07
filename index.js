@@ -1,12 +1,7 @@
 const express = require('express');
 const path = require('path');
-const logger = require('./logger')
 
-// Import utility modules for each CRUD operation
-const CreateStudentUtil = require('./utils/DaniellaUtil');
-const ViewRankingsUtil = require('./utils/DylanUtil');
-const UpdateStudentUtil = require('./utils/GengyueUtil');
-const DeleteAccountUtil = require('./utils/DanishUtil');
+
 
 const app = express();
 /* istanbul ignore next */
@@ -19,6 +14,12 @@ if (process.env.NODE_ENV == 'production') {
   console.log("Status Monitor Initialized");
 }
 
+const logger = require('./logger')
+// Import utility modules for each CRUD operation
+const CreateStudentUtil = require('./utils/DaniellaUtil');
+const ViewRankingsUtil = require('./utils/DylanUtil');
+const UpdateStudentUtil = require('./utils/GengyueUtil');
+const DeleteAccountUtil = require('./utils/DanishUtil');
 const PORT = process.env.PORT || 5000;
 
 // Middleware

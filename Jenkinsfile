@@ -123,6 +123,7 @@ pipeline {
     bat '''
       kubectl get pods
       kubectl exec deploy/chess-club-deploy -- printenv NODE_ENV
+      kubectl logs deploy/chess-club-deploy
     '''
   }
 }
