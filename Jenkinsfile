@@ -117,7 +117,7 @@ pipeline {
       }
     }
     stage('Verify Environment') {
-  steps {
+    steps {
     bat '''
       kubectl get pods
       kubectl exec deploy/chess-club-deploy -- printenv NODE_ENV
@@ -126,20 +126,20 @@ pipeline {
 }
 
   stage('Verify Status Endpoint') {
-  steps {
-    bat '''
-      echo Checking /status endpoint...
-      powershell -Command "
-        try {
-          Invoke-WebRequest http://localhost:30080/status -UseBasicParsing
-          Write-Host 'Status endpoint OK'
-        } catch {
-          Write-Host 'Status endpoint not available (non-fatal)'
-        }
-      "
-    '''
+    steps {
+      bat '''
+        echo Checking /status endpoint...
+        powershell -Command "
+          try {
+            Invoke-WebRequest http://localhost:30080/status -UseBasicParsing
+            Write-Host 'Status endpoint OK'
+          } catch {
+            Write-Host 'Status endpoint not available (non-fatal)'
+          }
+        "
+      '''
+    }
   }
-}
 
 
 
@@ -156,4 +156,5 @@ pipeline {
       archiveArtifacts artifacts: 'coverage/**', fingerprint: true
     }
   }
+}
 }
