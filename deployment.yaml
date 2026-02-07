@@ -11,9 +11,9 @@ spec:
     metadata:
       labels:
         app: chess-club # Labels applied to pods created by this deployment
-  spec:
-    containers:
-      - name: chess-club # Name of the container
-        image: chess-club-app # Docker image to use for the container
-        ports:
-          - containerPort: 5000 # Port that the container exposes
+    spec:
+      containers:
+        - name: chess-club # Name of the container
+          image: chess-club-app # Docker image to use for the container
+          ports:
+            - containerPort: 5000 # Port that the container exposes
