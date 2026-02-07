@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 /* istanbul ignore next */
-if (!process.env.JEST_WORKER_ID) {
+if (process.env.NODE_ENV !== 'test') {
   const statusMonitor = require('express-status-monitor');
 
   app.use(statusMonitor({
@@ -24,7 +24,6 @@ if (!process.env.JEST_WORKER_ID) {
     title: 'Chess Club System Status'
   }));
 }
-
 
 
 
