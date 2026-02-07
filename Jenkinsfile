@@ -1,0 +1,133 @@
+def runCmd(cmd) {
+  if (isUnix()) {
+    sh cmd
+  } else {
+    bat cmd
+  }
+}
+
+pipeline {
+  agent any
+
+  options {
+    disableConcurrentBuilds()
+    timestamps()
+  }
+
+  environment {
+    APP_NAME = 'chess-club'
+    IMAGE_NAME = 'chess-club-app'
+    CONTAINER_PORT = '5000'
+    NODE_PORT = '30080'
+  }
+
+  stages {
+
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Install Dependencies') {
+      steps {
+        script {
+          runCmd('npm install')
+        }
+      }
+    }
+
+    stage('Backend Tests') {
+      steps {
+        script {
+          runCmd('npm test')
+        }
+      }
+    }
+
+    stage('Frontend Tests') {
+      steps {
+        script {
+          runCmd('npm run test-frontend')
+        }
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        script {
+          runCmd("docker build -t ${IMAGE_NAME} .")
+        }
+      }
+    }
+
+    stage('Start Minikube') {
+      steps {
+        script {
+          runCmd('minikube start')
+        }
+      }
+    }
+
+    stage('Load Image into Minikube') {
+      steps {
+        script {
+          runCmd("minikube image load ${IMAGE_NAME}")
+        }
+      }
+    }
+
+    stage('Deploy to Kubernetes') {
+      steps {
+        script {
+          runCmd('kubectl apply -f deployment.yaml')
+          runCmd('kubectl apply -f service.yaml')
+          runCmd('kubectl get pods')
+          runCmd('kubectl get services')
+        }
+      }
+    }
+
+    stage('Wait for Pods') {
+      steps {
+        script {
+          runCmd('kubectl rollout status deployment/chess-club-deploy')
+        }
+      }
+    }
+
+    stage('Smoke Test (HTTP)') {
+      steps {
+        script {
+          if (isUnix()) {
+            sh """
+              kubectl port-forward svc/chess-club-service ${NODE_PORT}:${CONTAINER_PORT} &
+              sleep 5
+              curl http://127.0.0.1:${NODE_PORT}
+            """
+          } else {
+            bat """
+              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:${CONTAINER_PORT}
+              timeout /t 5 > NUL
+              powershell -Command "Invoke-WebRequest http://127.0.0.1:${NODE_PORT} -UseBasicParsing"
+            """
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo "✅ Pipeline completed successfully"
+    }
+
+    failure {
+      echo "❌ Pipeline failed"
+    }
+
+    always {
+      archiveArtifacts artifacts: 'coverage/**', fingerprint: true
+    }
+  }
+}
