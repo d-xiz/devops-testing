@@ -102,9 +102,11 @@ pipeline {
         script {
           if (isUnix()) {
             sh """
-              kubectl port-forward svc/chess-club-service ${NODE_PORT}: 5050 &
+              kubectl port-forward svc/chess-club-service ${NODE_PORT}:5050 &
+              PID=\$!
               sleep 5
-              curl http://127.0.0.1:${NODE_PORT}
+              curl -f http://127.0.0.1:${NODE_PORT} || exit 1
+              kill \$PID
             """
           } else {
             bat """
