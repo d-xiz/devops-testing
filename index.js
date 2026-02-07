@@ -38,10 +38,11 @@ app.get('/', (req, res) => {
 /* istanbul ignore next */
 if (process.env.NODE_ENV !== 'test') {
 
-app.listen(PORT, () => {
-    console.log(`Chess Club Ranking System running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Chess Club Ranking System running on port ${PORT}`);
     console.log(`Server started at ${new Date().toLocaleString()}`);
 });
+
 }
 
 module.exports = app; // Export app for testing purposes
