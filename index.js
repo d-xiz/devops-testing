@@ -3,10 +3,13 @@ const path = require('path');
 
 const app = express();
 /* istanbul ignore next */
-app.use(require('express-status-monitor')({
-  path: '/status',
-  title: 'Chess Club System Status'
-}));
+if (process.env.NODE_ENV !== 'test') {
+  console.log('Registering /status endpoint');
+  app.use(require('express-status-monitor')({
+    path: '/status',
+    title: 'Chess Club System Status'
+  }));
+}
 
 
 const logger = require('./logger')
