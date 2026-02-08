@@ -3,10 +3,11 @@ const path = require('path');
 
 const app = express();
 /* istanbul ignore next */
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
-  const statusMonitor = require('express-status-monitor');
-  app.use(statusMonitor());
-}
+app.use(require('express-status-monitor')({
+  path: '/status',
+  title: 'Chess Club System Status'
+}));
+
 
 const logger = require('./logger')
 
