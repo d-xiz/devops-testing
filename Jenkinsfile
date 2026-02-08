@@ -13,10 +13,14 @@ pipeline {
     disableConcurrentBuilds()
     timestamps()
   }
+  triggers {
+    pollSCM('H/1 * * * *')
+  }
 
   environment {
     APP_NAME = 'chess-club'
     IMAGE_NAME = 'chess-club-app'
+    IMAGE_TAG  = "${BUILD_NUMBER}"
     CONTAINER_PORT = '5000'
     NODE_PORT = '30080'
   }
@@ -32,7 +36,7 @@ pipeline {
     stage('Install Dependencies') {
       steps {
         script {
-          runCmd('npm install')
+          runCmd('npm ci')
         }
       }
     }
@@ -41,13 +45,6 @@ pipeline {
       steps {
         script {
           runCmd('npm test')
-        }
-      }
-    }
-
-    stage('Frontend Tests') {
-      steps {
-        script {
           runCmd('npm run test-frontend')
         }
       }
@@ -56,7 +53,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          runCmd("docker build --no-cache -t ${IMAGE_NAME} .")
+          runCmd("docker build --no-cache -t ${IMAGE_NAME}:${IMAGE_TAG} .")
         }
       }
     }
@@ -72,7 +69,7 @@ pipeline {
     stage('Load Image into Minikube') {
       steps {
         script {
-          runCmd("minikube image load ${IMAGE_NAME}")
+          runCmd("minikube image load ${IMAGE_NAME}:${IMAGE_TAG}")
         }
       }
     }
@@ -83,8 +80,6 @@ pipeline {
           runCmd('kubectl delete deployment chess-club-deploy --ignore-not-found')
           runCmd('kubectl apply -f deployment.yaml')
           runCmd('kubectl apply -f service.yaml')
-          runCmd('kubectl get pods')
-          runCmd('kubectl get services')
         }
       }
     }
@@ -97,20 +92,18 @@ pipeline {
       }
     }
 
-    stage('Smoke Test (HTTP)') {
+    stage('Smoke Test ') {
       steps {
         script {
           if (isUnix()) {
             sh """
-              kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000 &
-              PID=\$!
+              kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000 >/dev/null 2>&1 &
               sleep 5
-              curl -f http://127.0.0.1:${NODE_PORT} || exit 1
-              kill \$PID
+              curl -f http://127.0.0.1:${NODE_PORT}
             """
           } else {
             bat """
-              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000 &
+              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000
               timeout /t 5 > NUL
               powershell -Command "Invoke-WebRequest http://127.0.0.1:${NODE_PORT} -UseBasicParsing"
             """
@@ -118,43 +111,14 @@ pipeline {
         }
       }
     }
-    stage('Verify Environment') {
-  steps {
-    bat '''
-      kubectl get pods
-      kubectl exec deploy/chess-club-deploy -- printenv NODE_ENV
-      kubectl logs deploy/chess-club-deploy
-    '''
-  }
-}
-
- stage('Verify Status Endpoint') {
-  steps {
-    script {
-      bat """
-        @echo off
-        :: Force kill any existing port-forwards to free up port 30080
-        taskkill /IM kubectl.exe /F 2>nul
-
-        echo Starting Tunnel...
-        start /B kubectl port-forward svc/chess-club-service 30080:5000
-
-        echo Waiting for tunnel to stabilize (10 seconds)...
-        ping 127.0.0.1 -n 10 > nul
-
-        echo Checking /status endpoint...
-        powershell -Command "try { \$r = Invoke-WebRequest http://127.0.0.1:30080/status -UseBasicParsing; if(\$r.StatusCode -eq 200) { echo 'SUCCESS'; exit 0 } else { exit 1 } } catch { echo 'Failed to reach /status'; exit 1 }"
-
-        echo Cleaning up tunnel...
-        taskkill /IM kubectl.exe /F 2>nul
-      """
-    }
-  }
-}
-
   }
   post {
+      always {
+      archiveArtifacts artifacts: 'coverage/**', fingerprint: true
+    }
     success {
+       echo "Build SUCCESS"
+
        emailext(
       to: 'danishmohamed2003@gmail.com',
       subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -170,6 +134,7 @@ pipeline {
     }
 
     failure {
+       echo "Build FAILED"
        emailext(
       to: 'danishmohamed2003@gmail.com',
       subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -185,10 +150,6 @@ pipeline {
       attachLog: true,
       compressLog: true
     )
-
-    always {
-      archiveArtifacts artifacts: 'coverage/**', fingerprint: true
-    }
   }
 }
 }

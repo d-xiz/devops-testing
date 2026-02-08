@@ -1,44 +1,21 @@
 const express = require('express');
 const path = require('path');
-
-
-
-const app = express();
-/* istanbul ignore next */
-if (process.env.NODE_ENV == 'production') {
-   console.log('Registering /status endpoint');
-  app.use(require('express-status-monitor')({
-    path: '/status',
-    title: 'Chess Club System Status',
-    spans: [{ interval: 1, retention: 60 }]
-  }));
-  console.log("Status Monitor Initialized");
-}
-console.log('===== APP BOOT =====');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('Express version:', require('express/package.json').version);
-
-try {
-  require.resolve('express-status-monitor');
-  console.log('express-status-monitor: FOUND');
-} catch (e) {
-  console.log('express-status-monitor: NOT FOUND');
-}
-
+const statusMonitor = require('express-status-monitor');
 const logger = require('./logger')
+
 // Import utility modules for each CRUD operation
 const CreateStudentUtil = require('./utils/DaniellaUtil');
 const ViewRankingsUtil = require('./utils/DylanUtil');
 const UpdateStudentUtil = require('./utils/GengyueUtil');
 const DeleteAccountUtil = require('./utils/DanishUtil');
+
+const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
 app.use(express.static('public'));
-
-
-
+app.use(statusMonitor());
 
 // ===== Daniella - CREATE API Endpoints =====
 app.post('/api/students', CreateStudentUtil.createStudent);
