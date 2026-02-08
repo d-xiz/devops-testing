@@ -95,15 +95,14 @@ pipeline {
       }
     }
 
-     stage('Smoke Test (NodePort)') {
-            steps {
-                bat '''
-                FOR /F "tokens=*" %%i IN ('minikube ip') DO SET MINIKUBE_IP=%%i
-                powershell -Command "Invoke-WebRequest http://%MINIKUBE_IP%:30080 -UseBasicParsing"
-                '''
-            }
-        }
-    }
+    stage('Smoke Test (NodePort)') {
+  steps {
+    bat '''
+    powershell -Command "Invoke-WebRequest http://localhost:30080 -UseBasicParsing"
+    '''
+  }
+}
+
   post {
       always {
       archiveArtifacts artifacts: 'coverage/**', fingerprint: true
