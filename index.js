@@ -3,7 +3,7 @@ const path = require('path');
 
 const app = express();
 /* istanbul ignore next */
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV === 'development'|| process.env.NODE_ENV === 'production') {
   console.log('Registering /status endpoint');
   app.use(require('express-status-monitor')({
     path: '/status',
