@@ -36,7 +36,7 @@ pipeline {
     stage('Install Dependencies') {
       steps {
         script {
-          runCmd('npm ci')
+          runCmd('npm install')
         }
       }
     }
