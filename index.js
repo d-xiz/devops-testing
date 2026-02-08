@@ -1,6 +1,12 @@
 const express = require('express');
 const path = require('path');
-const statusMonitor = require('express-status-monitor');
+
+const app = express();
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
+  const statusMonitor = require('express-status-monitor');
+  app.use(statusMonitor());
+}
+
 const logger = require('./logger')
 
 // Import utility modules for each CRUD operation
@@ -9,13 +15,13 @@ const ViewRankingsUtil = require('./utils/DylanUtil');
 const UpdateStudentUtil = require('./utils/GengyueUtil');
 const DeleteAccountUtil = require('./utils/DanishUtil');
 
-const app = express();
+
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
 app.use(express.static('public'));
-app.use(statusMonitor());
+
 
 // ===== Daniella - CREATE API Endpoints =====
 app.post('/api/students', CreateStudentUtil.createStudent);

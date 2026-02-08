@@ -11,6 +11,7 @@ COPY . .
 # Expose the port your app runs on
 EXPOSE 5000
 # Set environment variable for the port
+ENV NODE_ENV=production
 ENV PORT=5000
 # Define the command to run your app
 CMD [ "node", "index.js" ]
