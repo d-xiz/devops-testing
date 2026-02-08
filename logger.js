@@ -6,7 +6,7 @@ const transports = [
   new winston.transports.Console()
 ];
 
-// 🔥 File logging ONLY in dev & prod
+/* istanbul ignore next */
 if (NODE_ENV === 'development' || NODE_ENV === 'production') {
   transports.push(
     new winston.transports.File({ filename: 'error.log', level: 'error' }),

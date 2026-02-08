@@ -61,7 +61,7 @@ pipeline {
     stage('Start Minikube') {
       steps {
         script {
-           runCmd('minikube start --ports=127.0.0.1:30080:30080')
+           runCmd('minikube start')
         }
       }
     }
@@ -69,7 +69,8 @@ pipeline {
     stage('Load Image into Minikube') {
       steps {
         script {
-          runCmd("minikube image load ${IMAGE_NAME}:${IMAGE_TAG}")
+          runCmd("minikube image load chess-club-app:${IMAGE_TAG}")
+
         }
       }
     }
@@ -80,6 +81,8 @@ pipeline {
           runCmd('kubectl delete deployment chess-club-deploy --ignore-not-found')
           runCmd('kubectl apply -f deployment.yaml')
           runCmd('kubectl apply -f service.yaml')
+          runCmd('kubectl get pods')
+          runCmd('kubectl get services')
         }
       }
     }
@@ -92,26 +95,15 @@ pipeline {
       }
     }
 
-    stage('Smoke Test ') {
-      steps {
-        script {
-          if (isUnix()) {
-            sh """
-              kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000 >/dev/null 2>&1 &
-              sleep 5
-              curl -f http://127.0.0.1:${NODE_PORT}
-            """
-          } else {
-            bat """
-              start /B kubectl port-forward svc/chess-club-service ${NODE_PORT}:5000
-              timeout /t 5 > NUL
-              powershell -Command "Invoke-WebRequest http://127.0.0.1:${NODE_PORT} -UseBasicParsing"
-            """
-          }
+     stage('Smoke Test (NodePort)') {
+            steps {
+                bat '''
+                FOR /F "tokens=*" %%i IN ('minikube ip') DO SET MINIKUBE_IP=%%i
+                powershell -Command "Invoke-WebRequest http://%MINIKUBE_IP%:30080 -UseBasicParsing"
+                '''
+            }
         }
-      }
     }
-  }
   post {
       always {
       archiveArtifacts artifacts: 'coverage/**', fingerprint: true
@@ -120,6 +112,7 @@ pipeline {
        echo "Build SUCCESS"
 
        emailext(
+        from: 'Chess Club CI <chessclub@gmail.com>',
       to: 'danishmohamed2003@gmail.com',
       subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
      body: """
@@ -136,6 +129,7 @@ pipeline {
     failure {
        echo "Build FAILED"
        emailext(
+        from: 'Chess Club CI <chessclub@gmail.com>',
       to: 'danishmohamed2003@gmail.com',
       subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
       body: """
