@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: chess-club # Name of the container
-          image: chess-club-app:latest # Docker image to use for the container
+          image: chess-club-app:${BUILD_NUMBER} # Docker image to use for the container
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000 # Port that the container exposes

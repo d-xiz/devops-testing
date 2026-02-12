@@ -53,7 +53,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          runCmd("docker build --no-cache -t ${IMAGE_NAME}:latest .")
+          runCmd("docker build --no-cache -t ${IMAGE_NAME}:${IMAGE_TAG} .")
         }
       }
     }
@@ -69,7 +69,7 @@ pipeline {
     stage('Load Image into Minikube') {
       steps {
         script {
-          runCmd("minikube image load chess-club-app:latest")
+          runCmd("minikube image load ${IMAGE_NAME}:${IMAGE_TAG}")
 
         }
       }
@@ -78,8 +78,8 @@ pipeline {
     stage('Deploy to Kubernetes') {
       steps {
         script {
-          runCmd('kubectl delete deployment chess-club-deploy --ignore-not-found')
           runCmd('kubectl apply -f deployment.yaml')
+          runCmd("kubectl set image deployment/chess-club-deploy chess-club=${IMAGE_NAME}:${IMAGE_TAG}")
           runCmd('kubectl apply -f service.yaml')
           runCmd('kubectl get pods')
           runCmd('kubectl get services')
