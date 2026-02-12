@@ -97,9 +97,7 @@ pipeline {
 
     stage('Smoke Test (NodePort)') {
   steps {
-    bat '''
-    powershell -Command "Invoke-WebRequest http://localhost:30080 -UseBasicParsing"
-    '''
+    bat 'minikube service chess-club-service --url'
   }
 }
   }
