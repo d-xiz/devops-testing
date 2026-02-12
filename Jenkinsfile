@@ -93,24 +93,21 @@ pipeline {
           runCmd('kubectl rollout status deployment/chess-club-deploy')
         }
       }
-    }
 stage('Smoke Test') {
   steps {
     script {
-      echo "Killing any old tunnels..."
-      // This prevents 'address already in use' errors
+      // 1. Kill any zombie tunnels from previous runs
       bat "taskkill /F /IM kubectl.exe /T || exit 0"
 
-      echo "Starting tunnel for demo..."
+      // 2. Start the tunnel with the 'dontKillMe' cookie
       withEnv(['JENKINS_NODE_COOKIE=dontKillMe']) {
-          // Use 0.0.0.0 to ensure it binds to all local network interfaces
           bat 'start /B kubectl port-forward service/chess-club-service 30080:5000 --address 0.0.0.0'
       }
 
-      echo "Waiting for tunnel to warm up..."
+      // 3. Give it time to stabilize
       sleep 10
 
-      echo "Testing connection..."
+      // 4. Verify it works within the pipeline
       bat 'powershell -Command "Invoke-WebRequest http://localhost:30080 -UseBasicParsing"'
     }
   }
