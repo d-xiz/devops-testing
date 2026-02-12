@@ -97,25 +97,24 @@ pipeline {
 stage('Smoke Test') {
   steps {
     script {
+      echo "Killing any old tunnels..."
+      // This prevents 'address already in use' errors
+      bat "taskkill /F /IM kubectl.exe /T || exit 0"
 
-      if (isUnix()) {
-        sh "kubectl port-forward service/chess-club-service 30080:5000 &"
-      } else {
-        bat 'start /B kubectl port-forward service/chess-club-service 30080:5000'
+      echo "Starting tunnel for demo..."
+      withEnv(['JENKINS_NODE_COOKIE=dontKillMe']) {
+          // Use 0.0.0.0 to ensure it binds to all local network interfaces
+          bat 'start /B kubectl port-forward service/chess-club-service 30080:5000 --address 0.0.0.0'
       }
 
-      sleep 5
+      echo "Waiting for tunnel to warm up..."
+      sleep 10
 
-      echo "Running smoke test on http://localhost:30080"
-      if (isUnix()) {
-        sh "curl --fail http://localhost:30080"
-      } else {
-        bat 'powershell -Command "Invoke-WebRequest http://localhost:30080 -UseBasicParsing"'
-      }
+      echo "Testing connection..."
+      bat 'powershell -Command "Invoke-WebRequest http://localhost:30080 -UseBasicParsing"'
     }
   }
 }
-
 
   }
   post {
