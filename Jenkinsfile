@@ -61,7 +61,7 @@ pipeline {
     stage('Start Minikube') {
       steps {
         script {
-           runCmd('minikube start')
+           runCmd(' minikube start --ports=127.0.0.1:30080:30080 --driver=docker ')
         }
       }
     }
@@ -95,12 +95,26 @@ pipeline {
       }
     }
 
-    stage('Smoke Test (NodePort)') {
-      steps {
-        bat "kubectl get svc chess-club-service"
-        bat "kubectl get endpoints chess-club-service"
+  stage('Smoke Test') {
+  steps {
+    script {
+      if (isUnix()) {
+        sh """
+          kubectl port-forward svc/${APP_NAME}-service ${NODE_PORT}:${CONTAINER_PORT} >/dev/null 2>&1 &
+          sleep 5
+          curl -f http://127.0.0.1:${NODE_PORT}
+        """
+      } else {
+        bat """
+          start /B kubectl port-forward service/${APP_NAME}-service ${NODE_PORT}:${CONTAINER_PORT}
+          timeout /t 5 > NUL
+          powershell -Command "Invoke-WebRequest http://127.0.0.1:${NODE_PORT} -UseBasicParsing"
+        """
+      }
+    }
   }
 }
+
   }
   post {
       always {
