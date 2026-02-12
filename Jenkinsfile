@@ -53,7 +53,7 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          runCmd("docker build --no-cache -t ${IMAGE_NAME}:${IMAGE_TAG} .")
+          runCmd("docker build --no-cache -t ${IMAGE_NAME}:latest .")
         }
       }
     }
