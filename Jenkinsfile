@@ -97,15 +97,12 @@ pipeline {
 
     stage('Smoke Test (NodePort)') {
   steps {
-    stage('Smoke Test') {
-  steps {
+
     bat '''
     start /B kubectl port-forward service/chess-club-service 5000:5000
     timeout /t 5
     powershell -Command "Invoke-WebRequest http://localhost:5000 -UseBasicParsing"
     '''
-  }
-}
 
   }
 }
