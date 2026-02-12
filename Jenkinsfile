@@ -91,27 +91,23 @@ pipeline {
       steps {
         script {
           runCmd('kubectl rollout status deployment/chess-club-deploy')
-        }
+        }}
       }
+
 stage('Smoke Test') {
   steps {
     script {
-      // 1. Kill any zombie tunnels from previous runs
       bat "taskkill /F /IM kubectl.exe /T || exit 0"
 
-      // 2. Start the tunnel with the 'dontKillMe' cookie
       withEnv(['JENKINS_NODE_COOKIE=dontKillMe']) {
           bat 'start /B kubectl port-forward service/chess-club-service 30080:5000 --address 0.0.0.0'
-      }
 
-      // 3. Give it time to stabilize
       sleep 10
 
-      // 4. Verify it works within the pipeline
       bat 'powershell -Command "Invoke-WebRequest http://localhost:30080 -UseBasicParsing"'
     }
   }
-}
+}}
 
   }
   post {
