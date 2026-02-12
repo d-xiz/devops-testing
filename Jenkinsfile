@@ -97,20 +97,20 @@ pipeline {
 stage('Smoke Test') {
   steps {
     script {
-      echo "Checking running pods..."
-      runCmd('kubectl get pods')
-
-      echo "Checking services..."
-      runCmd('kubectl get services')
-
-      echo "Running smoke test on NodePort ${NODE_PORT}..."
 
       if (isUnix()) {
-        sh "curl --fail http://localhost:${NODE_PORT}/"
+        sh "kubectl port-forward service/chess-club-service 30080:5000 &"
       } else {
-        bat """
-        powershell -Command "Invoke-WebRequest http://localhost:${NODE_PORT} -UseBasicParsing"
-        """
+        bat 'start /B kubectl port-forward service/chess-club-service 30080:5000'
+      }
+
+      sleep 5
+
+      echo "Running smoke test on http://localhost:30080"
+      if (isUnix()) {
+        sh "curl --fail http://localhost:30080"
+      } else {
+        bat 'powershell -Command "Invoke-WebRequest http://localhost:30080 -UseBasicParsing"'
       }
     }
   }
