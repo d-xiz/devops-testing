@@ -69,7 +69,7 @@ pipeline {
     stage('Load Image into Minikube') {
       steps {
         script {
-          runCmd("minikube image load chess-club-app:${IMAGE_TAG}")
+          runCmd("minikube image load chess-club-app:latest")
 
         }
       }
