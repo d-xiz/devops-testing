@@ -94,8 +94,7 @@ pipeline {
         }
       }
     }
-
- stage('Smoke Test') {
+stage('Smoke Test') {
   steps {
     script {
       echo "Checking running pods..."
@@ -104,11 +103,19 @@ pipeline {
       echo "Checking services..."
       runCmd('kubectl get services')
 
-      echo "Running smoke test on NodePort..."
-      runCmd('curl --fail http://localhost:30080/')
+      echo "Running smoke test on NodePort ${NODE_PORT}..."
+
+      if (isUnix()) {
+        sh "curl --fail http://localhost:${NODE_PORT}/"
+      } else {
+        bat """
+        powershell -Command "Invoke-WebRequest http://localhost:${NODE_PORT} -UseBasicParsing"
+        """
+      }
     }
   }
 }
+
 
   }
   post {
